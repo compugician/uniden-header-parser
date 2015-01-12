@@ -25,9 +25,10 @@ function verifyFourCC(file, fourcc, position) {
 	var b = getFourCCAt(file,position);
 	if (fourcc == b) {
 		console.log("Detected FourCC '"+fourcc+"' in expected position of "+position);
+		return true;
 	} else {
 		console.log("Expected '"+fourcc+"' at "+position+" but found '"+b+"'");
-		return;
+		return false;
 	}
 }
 
