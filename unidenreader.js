@@ -86,12 +86,19 @@ function getDataFromChunkAt(file,pos,o,raw) {
 var chunkData = { };
 var pos = 24; //starting position of first subchunk (should be INFO) of LIST.
 var length = 0;
+
+var b = new Buffer(1);
+do {
+	fs.readSync(file, b, 0, 1, pos)
+	if (0x00==b[0]) { pos++; }
+} while (0x00==b[0] && (pos<(24+listLength)));
+
 while ((pos+length)<getNextChunkStartPos(file,12)) {
 	var chunkName = getDataFromChunkAt(file, pos, chunkData);
 	pos = getNextChunkStartPos(file,pos);
 
-	//eitehr I don't understand RIFF, or uniden screwed up. The following is to compensate
-	if ("IKEY" == chunkName) { pos+=4; }	
+//	//eitehr I don't understand RIFF, or uniden screwed up. The following is to compensate
+//	if ("IKEY" == chunkName) { pos+=4; }	
 
 	length = getRecordLength(file,pos);
 	console.log("Next: "+pos+"("+length+")");
