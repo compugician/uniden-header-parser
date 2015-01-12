@@ -40,13 +40,14 @@ function getRecordLength(file, position) {
 	return result;
 }
 
-verifyFourCC(file, "RIFF", 0);
+if (!verifyFourCC(file, "RIFF", 0)) { console.log("ERROR! Quitting!"); return -1; }
 var riffLength = getRecordLength(file,0);
-verifyFourCC(file, "WAVE", 8);
-verifyFourCC(file, "LIST", 12);
+if (!verifyFourCC(file, "WAVE", 8)) { console.log("WARNING! Missing WAVE marker"); }
+if (!verifyFourCC(file, "LIST", 12)) { console.log("ERROR! LIST chunk not detected! Quitting!"); return -1; }
 var listLength = getRecordLength(file,12);
-verifyFourCC(file, "INFO", 20);
-verifyFourCC(file, "unid", 12 + 4 + 4 + listLength);
+if (!verifyFourCC(file, "INFO", 20)) { console.log("WARNING! INFO chunk not detected!"); }
+
+var unidChunkPresent = verifyFourCC(file, "unid", 12 + 4 + 4 + listLength);
 
 
 //given the starting position of a known chunk, return the starting position of the next chunk, if any. (not guaranteed that there is one, compare to expected total record length to verify you don't step out of bounds.
@@ -83,7 +84,7 @@ function getDataFromChunkAt(file,pos,o,raw) {
 }
 
 var chunkData = { };
-var pos = 24;
+var pos = 24; //starting position of first subchunk (should be INFO) of LIST.
 var length = 0;
 while ((pos+length)<getNextChunkStartPos(file,12)) {
 	var chunkName = getDataFromChunkAt(file, pos, chunkData);
@@ -96,7 +97,9 @@ while ((pos+length)<getNextChunkStartPos(file,12)) {
 	console.log("Next: "+pos+"("+length+")");
 }
 
-var pos = getNextChunkStartPos(file,12);
-getDataFromChunkAt(file,pos,chunkData,true);
+if (unidChunkPresent) {
+	var pos = getNextChunkStartPos(file,12);
+	getDataFromChunkAt(file,pos,chunkData,true);
+}
 
 fs.closeSync(file);
