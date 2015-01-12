@@ -1,4 +1,3 @@
-var randomAccessFile = require('random-access-file');
 var fs = require('fs');
 
 var fname = process.argv[2]; // 0 = node, 1 = script, 2 = first argument (or undefined)
