@@ -66,7 +66,7 @@ function getNullPosition(b) {
 	return i;
 }
 
-function getDataFromChunkAt(file,pos,o,raw) {
+function getDataFromChunkAt(file,pos,o) {
 	if (typeof raw == 'undefined') { raw = false; }
 
 	var fourcc = getFourCCAt(file,pos);
@@ -74,12 +74,10 @@ function getDataFromChunkAt(file,pos,o,raw) {
 	var b = new Buffer(chunklength);
 	fs.readSync(file, b, 0, chunklength, pos+8);
 	
-	if (raw) {
-		o[fourcc] = b;
-	} else {
-		o[fourcc] = b.toString('utf-8', 0, getNullPosition(b));
-	}
-	console.log("Set '"+fourcc+"' to: ["+o[fourcc]+"]");
+	o[fourcc] = b.toString('utf-8', 0, getNullPosition(b));
+	o[fourcc]['rawdata'] = b;
+
+	console.log("Set '"+fourcc+"' to: ["+o[fourcc]+"]:["+b+"]");
 	return fourcc;
 }
 
@@ -106,7 +104,7 @@ while ((pos+length)<getNextChunkStartPos(file,12)) {
 
 if (unidChunkPresent) {
 	var pos = getNextChunkStartPos(file,12);
-	getDataFromChunkAt(file,pos,chunkData,true);
+	getDataFromChunkAt(file,pos,chunkData);
 }
 
 fs.closeSync(file);
