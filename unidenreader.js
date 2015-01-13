@@ -70,8 +70,6 @@ function getNullPosition(b) {
 }
 
 function getDataFromChunkAt(file,pos,o) {
-	if (typeof raw == 'undefined') { raw = false; }
-
 	var fourcc = getFourCCAt(file,pos);
 	var chunklength = getRecordLength(file,pos);
 	var b = new Buffer(chunklength);
@@ -118,3 +116,4 @@ fs.closeSync(file);
 
 console.log(chunkData);
 
+if (chunkData.hasOwnProperty('unid')) { console.log(chunkData['unid']['rawdata'].toString()); }
