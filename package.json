@@ -1,7 +1,10 @@
 {
   "name": "uniden-header",
   "version": "0.0.1",
-  "repository": "git://github.com/compugician/uniden-header-parser",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/compugician/uniden-header-parser"
+  },
   "license": "MIT",
   "description": "Parse RIFF fields from uniden home-patrol and bearcat scanner recordings",
   "keywords": [
@@ -11,8 +14,13 @@
     "riff"
   ],
   "author": "Tal Achituv <tal@compugician.com>",
-  "scripts": {
+  "scripts": {},
+  "dependencies": {},
+  "bugs": {
+    "url": "https://github.com/compugician/uniden-header-parser/issues"
   },
-  "dependencies": {
+  "main": "index.js",
+  "directories": {
+    "test": "test"
   }
 }
