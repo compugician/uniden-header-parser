@@ -107,14 +107,35 @@ function getNullPosition(b) {
 	return i;
 }
 
+
 function getDataFromChunkAt(file,pos,o) {
 	var fourcc = getFourCCAt(file,pos);
 	var chunklength = getRecordLength(file,pos);
 	var b = new Buffer(chunklength);
 	fs.readSync(file, b, 0, chunklength, pos+8);
 
+	j = 0;
+	k = 0;
+	dataArr = [];
+	lastWasNull=false;
+	for (i=0; i<chunklength; i++) {
+		if (0x00 == b[i]) {
+			k=0;
+			lastWasNull=true;
+		} else {
+			if (lastWasNull) { j=j+1; }
+
+			if (null == dataArr[j]) {
+				dataArr[j] = [];
+			}
+			dataArr[j][k++] = b[i];
+
+		}
+	}
+
 	o[fourcc] = { };
-	o[fourcc]['string'] = b.toString('utf-8', 0, getNullPosition(b));
+	o[fourcc]['elements'] = dataArr;
+	o[fourcc]['string'] = String.fromCharCode.apply(null, dataArr[0]);
 	o[fourcc]['rawdata'] = b;
 
 	if (DEBUG) { console.log("Set '"+fourcc+"' to: ["+o[fourcc]+"]:["+b+"]"); }
