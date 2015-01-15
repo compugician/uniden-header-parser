@@ -123,7 +123,9 @@ function getDataFromChunkAt(file,pos,o) {
 			k=0;
 			lastWasNull=true;
 		} else {
-			if (lastWasNull) { j=j+1; }
+			if (lastWasNull && null != dataArr[0]) {
+				j=j+1;
+			}
 
 			if (null == dataArr[j]) {
 				dataArr[j] = [];
