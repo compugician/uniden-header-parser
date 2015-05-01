@@ -124,7 +124,7 @@ function getNextChunkStartPos(file,pos) {
 	return pos+8+chunklength;
 }
 
-//return the position of first occorance of null, or the length of the buffer otherwise
+//return the position of first occurrence of null, or the length of the buffer otherwise
 function getNullPosition(b) {
 	for (i=0; i<b.length; i++) {
 		if (0x00 == b[i]) {
